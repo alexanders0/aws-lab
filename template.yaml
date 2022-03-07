@@ -17,6 +17,13 @@ Resources:
         - DynamoDBWritePolicy:
             TableName:
               !Ref CinemaTable
+      Events:
+        PostUser:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CinemaAPI
+            Path: "/add_reservation"
+            Method: POST
 
   DisplayShow:
     Type: AWS::Serverless::Function
@@ -32,6 +39,13 @@ Resources:
         - DynamoDBReadPolicy:
             TableName:
               !Ref CinemaTable
+      Events:
+        PostUser:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CinemaAPI
+            Path: "/display_show/show/{show_id}"
+            Method: GET
 
   DisplayMovie:
     Type: AWS::Serverless::Function
@@ -47,6 +61,13 @@ Resources:
         - DynamoDBReadPolicy:
             TableName:
               !Ref CinemaTable
+      Events:
+        PostUser:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CinemaAPI
+            Path: "/display_movie"
+            Method: GET
 
   CinemaTable:
     Type: AWS::DynamoDB::Table
@@ -69,3 +90,14 @@ Resources:
       ProvisionedThroughput: 
         ReadCapacityUnits: "5"
         WriteCapacityUnits: "5"
+  
+  CinemaAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Name: cinema-api
+      DefinitionBody:
+        'Fn::Transform':
+          Name: 'AWS::Include'
+          Parameters:
+            Location: swaggerSpec.yaml

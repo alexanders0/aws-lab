@@ -24,6 +24,7 @@ def add_reservation(event, context):
             "success": True
         })
     }
+
 def display_show(event, context):
     # /show/{show_id}
     path_parameters = event["pathParameters"]
